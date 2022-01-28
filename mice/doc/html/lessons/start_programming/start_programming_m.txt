@@ -1,0 +1,84 @@
+ 
+Basics, Building SPICE Applications (MATLAB)
+===========================================================================
+ 
+   November 20, 2017
+ 
+ 
+Note About HTML Links
+--------------------------------------------------------
+ 
+   The HTML version of this lesson contains links pointing to various HTML
+   documents provided with the Toolkit. All of these links are relative
+   and, in order to function, require this document to be in a certain
+   location in the Toolkit HTML documentation directory tree.
+ 
+   In order for the links to be resolved, if not done already by installing
+   the lessons package under the Toolkit's ``doc/html'' directory, create a
+   subdirectory called ``lessons'' under the ``doc/html'' directory of the
+   ``mice/'' tree and copy this document to that subdirectory before
+   loading it into a Web browser.
+ 
+ 
+Environment Set-up
+--------------------------------------------------------
+ 
+   Use of Mice from MATLAB requires the Mice source and library directories
+   exist in the MATLAB search path. MATLAB provides a programmatic command
+   to add directories to the search path, "addpath."
+ 
+ 
+Unix/Linux
+ 
+   Assume Mice is installed at /naif/mice/. The corresponding path to the
+   Mice library being /naif/mice/lib; the path to the Mice source files
+   being /naif/mice/src/mice.
+ 
+      >> addpath( '/naif/mice/lib')
+      >> addpath( '/naif/mice/src/mice')
+ 
+ 
+Windows
+ 
+   Assume Mice is installed at C:\naif\mice\. The corresponding path to the
+   Mice library being C:\naif\mice\lib; the path to the Mice source files
+   being C:\naif\mice\src\mice.
+ 
+      >> addpath( 'C:\naif\mice\lib')
+      >> addpath( 'C:\naif\mice\src\mice')
+ 
+ 
+Confirm MATLAB can access Mice:
+ 
+      >> which mice
+ 
+   A proper response shows a path to the Mice interface library, similar
+   to:
+ 
+      /naif/mice/lib/mice.mexmaci
+ 
+   The response
+ 
+      'mice' not found.
+ 
+   indicates the MATLAB search path does not include the Mice directories
+   ``src/mice'' and ``lib.''
+ 
+ 
+A simple example program
+--------------------------------------------------------
+ 
+   This script calls the Mice function 'cspice_tkvrsn' then outputs the
+   return value.
+ 
+   File tk_ver.m:
+ 
+      function tk_ver()
+ 
+         disp( ['Toolkit version : ' cspice_tkvrsn('TOOLKIT') ] )
+ 
+   From MATLAB, execute the function:
+ 
+      >> tk_ver
+      Toolkit version : CSPICE_N0061
+ 
