@@ -1,0 +1,159 @@
+<HTML>
+<HEAD>
+<TITLE> Basics, Building SPICE Applications (MATLAB) </TITLE>
+</HEAD>
+
+<BODY style="color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);">
+
+<A NAME="top"></A>
+
+<TABLE STYLE="text-align: left; margin-left: auto; margin-right: auto; width: 800px;" BORDER="0" CELLPADDING="5" CELLSPACING="2">
+<TBODY>
+<TR>
+  <TD STYLE="background-color: rgb(153, 153, 153); vertical-align: middle; text-align: center;">
+  <DIV ALIGN="right">
+    <SMALL><SMALL><a href="../index.html">Main Page</a></SMALL></SMALL>
+  </DIV>
+  <B>Basics, Building SPICE Applications (MATLAB)</B> </TD>
+</TR>
+<TR>
+  <TD STYLE="vertical-align: top;">
+
+<H2> Table of Contents
+</H2>
+
+<PRE>
+   <A HREF="#Basics, Building SPICE Applications (MATLAB)">Basics, Building SPICE Applications (MATLAB)</A>
+      <A HREF="#Note About HTML Links">Note About HTML Links</A>
+      <A HREF="#Environment Set-up">Environment Set-up</A>
+         <A HREF="#Unix/Linux">Unix/Linux</A>
+         <A HREF="#Windows">Windows</A>
+         <A HREF="#Confirm MATLAB can access Mice:">Confirm MATLAB can access Mice:</A>
+      <A HREF="#A simple example program">A simple example program</A>
+
+</PRE>
+
+<HR SIZE=3 NOSHADE>
+
+<BR><BR>
+<A NAME="Basics, Building SPICE Applications (MATLAB)"></A>
+<p align="right"><a href="#top"><small>Top</small></a></p>
+<H1> Basics, Building SPICE Applications (MATLAB)
+</H1><HR SIZE=3 NOSHADE><P><BR><BR><BR>
+   November 20, 2017
+<P>
+ 
+<BR><BR>
+<A NAME="Note About HTML Links"></A>
+<p align="right"><a href="#top"><small>Top</small></a></p>
+<H2> Note About HTML Links
+</H2><HR ALIGN="LEFT" WIDTH=50% ><P><BR><BR>
+   The HTML version of this lesson contains links pointing to various HTML
+   documents provided with the Toolkit. All of these links are relative
+   and, in order to function, require this document to be in a certain
+   location in the Toolkit HTML documentation directory tree.
+<P>
+ 
+   In order for the links to be resolved, if not done already by installing
+   the lessons package under the Toolkit's ``doc/html'' directory, create a
+   subdirectory called ``lessons'' under the ``doc/html'' directory of the
+   ``mice/'' tree and copy this document to that subdirectory before
+   loading it into a Web browser.
+<P>
+ 
+<BR><BR>
+<A NAME="Environment Set-up"></A>
+<p align="right"><a href="#top"><small>Top</small></a></p>
+<H2> Environment Set-up
+</H2><HR ALIGN="LEFT" WIDTH=50% ><P><BR><BR>
+   Use of Mice from MATLAB requires the Mice source and library directories
+   exist in the MATLAB search path. MATLAB provides a programmatic command
+   to add directories to the search path, "addpath."
+<P>
+ 
+<BR><BR>
+<A NAME="Unix/Linux"></A>
+<p align="right"><a href="#top"><small>Top</small></a></p>
+<H3> Unix/Linux
+</H3><P><BR><BR>
+   Assume Mice is installed at /naif/mice/. The corresponding path to the
+   Mice library being /naif/mice/lib; the path to the Mice source files
+   being /naif/mice/src/mice.
+<P>
+ 
+<PRE>
+   &gt;&gt; addpath( '/naif/mice/lib')
+   &gt;&gt; addpath( '/naif/mice/src/mice')
+</PRE>
+<BR><BR>
+<A NAME="Windows"></A>
+<p align="right"><a href="#top"><small>Top</small></a></p>
+<H3> Windows
+</H3><P><BR><BR>
+   Assume Mice is installed at C:\naif\mice\. The corresponding path to the
+   Mice library being C:\naif\mice\lib; the path to the Mice source files
+   being C:\naif\mice\src\mice.
+<P>
+ 
+<PRE>
+   &gt;&gt; addpath( 'C:\naif\mice\lib')
+   &gt;&gt; addpath( 'C:\naif\mice\src\mice')
+</PRE>
+<BR><BR>
+<A NAME="Confirm MATLAB can access Mice:"></A>
+<p align="right"><a href="#top"><small>Top</small></a></p>
+<H3> Confirm MATLAB can access Mice:
+</H3><P><BR><BR>
+<PRE>
+   &gt;&gt; which mice
+</PRE>
+   A proper response shows a path to the Mice interface library, similar
+   to:
+<P>
+ 
+<PRE>
+   /naif/mice/lib/mice.mexmaci
+</PRE>
+   The response
+<P>
+ 
+<PRE>
+   'mice' not found.
+</PRE>
+   indicates the MATLAB search path does not include the Mice directories
+   ``src/mice'' and ``lib.''
+<P>
+ 
+<BR><BR>
+<A NAME="A simple example program"></A>
+<p align="right"><a href="#top"><small>Top</small></a></p>
+<H2> A simple example program
+</H2><HR ALIGN="LEFT" WIDTH=50% ><P><BR><BR>
+   This script calls the Mice function '<a href="../mice/cspice_tkvrsn.html">cspice_tkvrsn</a>' then outputs the
+   return value.
+<P>
+ 
+   File tk_ver.m:
+<P>
+ 
+<PRE>
+   function tk_ver()
+ 
+      disp( ['Toolkit version : ' <a href="../mice/cspice_tkvrsn.html">cspice_tkvrsn</a>('TOOLKIT') ] )
+</PRE>
+   From MATLAB, execute the function:
+<P>
+ 
+<PRE>
+   &gt;&gt; tk_ver
+   Toolkit version : CSPICE_N0061
+</PRE>
+
+</TD>
+</TR>
+</TBODY>
+</TABLE>
+
+</BODY>
+
+</HTML>
