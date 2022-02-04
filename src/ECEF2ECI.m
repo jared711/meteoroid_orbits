@@ -1,11 +1,11 @@
- function [x_ECI, R] = ECEF2ECI(x_ECEF, time)
+ function [x_ECI, R] = ECEF2ECI(x_ECEF, et)
 %ECEF2ECI converts a cartesian state vector from ECEF frame to ECI frame
 %given a time vector [YYYY;MM;DD;hh;mm;ss]
 % 
 % [x_ECI, R] = ECEF2ECI(x_ECEF, time)
 % 
 % Inputs:   x_ECEF = [km; km/s] (6x1) state in ECEF frame 
-%           time = [YYYY;MM;DD;hh;mm;ss] (6x1) time vector
+%           et = (scalar) ephemeris time
 % 
 % Outputs:  rv_ECI = [km; km/s] (6x1) state in ECI frame
 %           R = [] (6x6) rotation matrix from ECEF to ECI frame
@@ -14,9 +14,6 @@
 
 if isrow(x_ECEF);       x_ECEF = x_ECEF';                       end
 if ~iscolumn(x_ECEF);   error('rv_ECEF should be a vector');    end
-
-% ephemeris time conversion from SPICE
-et = cspice_str2et(datestr(time)); % [sec] ephemeris time
 
 % rotation matrix from ECEF to ECI frame
 R = cspice_sxform('IAU_EARTH','J2000',et);
