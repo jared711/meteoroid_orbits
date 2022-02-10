@@ -25,7 +25,7 @@ if h <= 180 % [km] vida, D., Gural, P. S., Brown, P. G., Campbell-Brown, M., & W
     omega = 7.292115e-5; %[rad/s]
     H = 8.5e3; %[m]
     c_d = 0.5; % coefficient of drag (2/3/22 may need to vary with altitude)
-    c_d = 1;
+%     c_d = 1;
     ang_vel = [0;0;omega]; % [rad/s] angular velocity vector of central body  x
     v_atm = cross(ang_vel,r_ECI); % [km/s] velocity vector of atmosphere  x
     v_rel = (v_ECI - v_atm)*1000; % [m/s] velocity of meteor relative to atmosphere x 
@@ -46,11 +46,14 @@ if h <= 180 % [km] vida, D., Gural, P. S., Brown, P. G., Campbell-Brown, M., & W
 %     a_drag = R_SCI2ECI(1:3,1:3)\a_drag; % convert back to SCI frame (inverse of SCI2ECI)
 
 %         a_drag = -2*c_d*rho*norm(v_rel)^2*(1.21/m)*(m/meteor.pd3d)^(2/3)*unit(v_rel)/1000; % Vida, D., Brown, P. G., & Campbell-Brown, M. (2018). Modelling the measurement accuracy of pre-atmosphere velocities of meteoroids. Monthly Notices of the Royal Astronomical Society, 479(4), 4307–4319. https://doi.org/10.1093/mnras/sty1841
+    d_drdot = -1/2*c_d*(A/m)*rho*((v_rel*v_rel')/norm(v_rel) + norm(v_rel)*eye(3));
+    d_dr = -1/2*c_d*(A/m)*norm(v_rel)*v_rel * (-1000*rho_0)/H*exp(-h*1000/H) - d_drdot * [0, -omega, 0; omega, 0, 0; 0, 0, 0];
 else
     a_drag = zeros(3,1); % [km/s^2]
+    d_dr = zeros(3);
+    d_drdot = zeros(3);
 end
 
-d_dr = zeros(3);
-d_drdot = zeros(3);
+
 
 end

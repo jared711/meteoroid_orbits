@@ -2,11 +2,11 @@ function [x_ECEF, R] = ENU2ECEF(x_ENU, phi, lambda, h)
 %ENU2ECEF converts a cartesian state vector from the ENU frame located at 
 % lat,lon in deg into the ECEF frame
 % 
-% [x_E] = ENU2ECEF(x_ENU, lat, lon, h, geodetic, ang_unit)
+% [x_E] = ENU2ECEF(x_ENU, phi, lambda, h)
 % 
 % Inputs:   x_ENU = [km;km/s] (6x1) full state in ENU frame
-%           lat = [deg] (scalar) latitude of observer
-%           lon = [deg] (scalar) longitude of observer
+%           phi = [deg] (scalar) latitude of observer
+%           lambda = [deg] (scalar) longitude of observer
 %           h = [km] (scalar) height of observer above geoid
 % 
 % Outputs:  x_ECEF = [km;km/s] (6x1) full state in ECEF frame

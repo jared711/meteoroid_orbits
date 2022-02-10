@@ -20,9 +20,9 @@ r_ENU = r*[cosd(el)*sind(az);
            cosd(el)*cosd(az);
            sind(el)];
      
-v_ENU = [r_dot*cosd(el)*sind(az) + r*az_dot*cosd(el)*cosd(az) - r*el_dot*sind(el)*sind(az);
-         r_dot*cosd(el)*cosd(az) - r*az_dot*cosd(el)*sind(az) - r*el_dot*sind(el)*cosd(az);
-         r_dot*sind(el) + r*el_dot*cosd(el)];
+v_ENU = [r_dot*cosd(el)*sind(az) + r*deg2rad(az_dot)*cosd(el)*cosd(az) - r*deg2rad(el_dot)*sind(el)*sind(az);
+         r_dot*cosd(el)*cosd(az) - r*deg2rad(az_dot)*cosd(el)*sind(az) - r*deg2rad(el_dot)*sind(el)*cosd(az);
+         r_dot*sind(el) + r*deg2rad(el_dot)*cosd(el)];
      
 x_ENU = [r_ENU; v_ENU];
 
@@ -31,15 +31,15 @@ J11 = [cosd(el)*sind(az),  r*cosd(el)*cosd(az), -r*sind(el)*sind(az);
                 sind(el),                    0,           r*cosd(el)];
             
 
-J21 = [az_dot*cosd(el)*cosd(az)  - el_dot*sind(el)*sind(az),...
-       r_dot*cosd(el)*cosd(az)   - r*az_dot*cosd(el)*sind(az) - r*el_dot*sind(el)*cosd(az),...
-       -r_dot*sind(el)*sind(az)  - r*az_dot*sind(el)*cosd(az) - r*el_dot*cosd(el)*sind(az);
-       -az_dot*cosd(el)*sind(az) - el_dot*sind(el)*cosd(az),...
-       r_dot*cosd(el)*sind(az)   - r*az_dot*cosd(el)*cosd(az) + r*el_dot*sind(el)*sind(az),...
-       -r_dot*sind(el)*cosd(az)  + r*az_dot*sind(el)*sind(az) - r*el_dot*cosd(el)*cosd(az);
-       el_dot*cosd(el),...
+J21 = [deg2rad(az_dot)*cosd(el)*cosd(az)  - deg2rad(el_dot)*sind(el)*sind(az),...
+       r_dot*cosd(el)*cosd(az)   - r*deg2rad(az_dot)*cosd(el)*sind(az) - r*deg2rad(el_dot)*sind(el)*cosd(az),...
+       -r_dot*sind(el)*sind(az)  - r*deg2rad(az_dot)*sind(el)*cosd(az) - r*deg2rad(el_dot)*cosd(el)*sind(az);
+       -deg2rad(az_dot)*cosd(el)*sind(az) - deg2rad(el_dot)*sind(el)*cosd(az),...
+       r_dot*cosd(el)*sind(az)   - r*deg2rad(az_dot)*cosd(el)*cosd(az) + r*deg2rad(el_dot)*sind(el)*sind(az),...
+       -r_dot*sind(el)*cosd(az)  + r*deg2rad(az_dot)*sind(el)*sind(az) - r*deg2rad(el_dot)*cosd(el)*cosd(az);
+       deg2rad(el_dot)*cosd(el),...
        0,...
-       r_dot*cosd(el) - r*el_dot*sind(el)];
+       r_dot*cosd(el) - r*deg2rad(el_dot)*sind(el)];
            
 J1 = [J11, zeros(3);
       J21,     J11];

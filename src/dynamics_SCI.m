@@ -37,14 +37,6 @@ r_SCI = vec(1:3); % [km] position vector
 v_SCI = vec(4:6); % [km/s] velocity vector
 a_SCI = (-gm/(norm(r_SCI)^3))*r_SCI; % [km/s^2] acceleration vector
 
-PHI = reshape(vec(7:42),6,6);
-
-d_drdot = zeros(3);
-d_dr = gm/(norm(r_SCI)^5)*...
-   [3*r_SCI(1)^2 - norm(r_SCI)^2, 3*r_SCI(1)*r_SCI(2), 3*r_SCI(1)*r_SCI(3);
-    3*r_SCI(1)*r_SCI(2), 3*r_SCI(2)^2 - norm(r_SCI)^2, 3*r_SCI(2)*r_SCI(3);
-    3*r_SCI(1)*r_SCI(3), 3*r_SCI(2)*r_SCI(3), 3*r_SCI(3)^2 - norm(r_SCI)^2];
-
 if flags(2)
     [a_SRP, d_dr_SRP, d_drdot_SRP] = acc_SRP(r_SCI, A, m); % [km/s^2]
 else
@@ -61,13 +53,31 @@ else
     d_drdot_TB = zeros(3);
 end
 
-d_dr = d_dr + d_dr_SRP + d_dr_TB;
-d_drdot = d_drdot + d_drdot_SRP + d_drdot_TB;
-PHI_dot = [zeros(3),  eye(3);
-               d_dr, d_drdot]*PHI;
-
 vec_dot = zeros(6,1);
 vec_dot(1:3) = v_SCI;
 vec_dot(4:6) = a_SCI + a_SRP + a_TB;
-vec_dot(7:42) = reshape(PHI_dot,36,1);
+
+if length(vec) == 42
+    PHI = reshape(vec(7:42),6,6);
+
+    % partials from central gravity field
+    d_drdot = zeros(3);
+    d_dr = gm/(norm(r_SCI)^5)*...
+       [3*r_SCI(1)^2 - norm(r_SCI)^2, 3*r_SCI(1)*r_SCI(2), 3*r_SCI(1)*r_SCI(3);
+        3*r_SCI(1)*r_SCI(2), 3*r_SCI(2)^2 - norm(r_SCI)^2, 3*r_SCI(2)*r_SCI(3);
+        3*r_SCI(1)*r_SCI(3), 3*r_SCI(2)*r_SCI(3), 3*r_SCI(3)^2 - norm(r_SCI)^2];
+    
+    % partials from perturbations
+    d_dr = d_dr + d_dr_SRP + d_dr_TB;
+    d_drdot = d_drdot + d_drdot_SRP + d_drdot_TB;
+    
+    % variational equations
+    PHI_dot = [zeros(3),  eye(3);
+               d_dr, d_drdot]*PHI;
+    vec_dot(7:42) = reshape(PHI_dot,36,1);
+elseif length(vec) == 6
+else
+    warning("input vector should be 6x1 or 42x1")
+end
+
 end

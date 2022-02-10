@@ -20,7 +20,7 @@ d = norm(r_sun); % [km] distance to sun
 a_SRP = p_srp(d)*c_srp*(A/m)*unit(r_sun); % [m/s^2]
 a_SRP = a_SRP/1000; % [km/s^2]
 
-d_dr = zeros(3);
+d_dr = p_srp(d)*c_srp*(A/m)*(eye(3)/norm(r_sun)^3 - 3*(r_sun*r_sun')/norm(r_sun)^5);
 d_drdot = zeros(3);
 
 end
