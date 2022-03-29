@@ -32,7 +32,6 @@ if isrow(vec);    vec = vec';                     end
 et = et0 + t; % [sec] ephemeris time
 gm = cspice_bodvrd( 'SUN', 'GM', 1 );
 
-x_SCI = vec(1:6); % [km;km/s] state vector
 r_SCI = vec(1:3); % [km] position vector
 v_SCI = vec(4:6); % [km/s] velocity vector
 a_SCI = (-gm/(norm(r_SCI)^3))*r_SCI; % [km/s^2] acceleration vector
@@ -61,12 +60,14 @@ if length(vec) == 42
     PHI = reshape(vec(7:42),6,6);
 
     % partials from central gravity field
-    d_drdot = zeros(3);
-    d_dr = gm/(norm(r_SCI)^5)*...
-       [3*r_SCI(1)^2 - norm(r_SCI)^2, 3*r_SCI(1)*r_SCI(2), 3*r_SCI(1)*r_SCI(3);
-        3*r_SCI(1)*r_SCI(2), 3*r_SCI(2)^2 - norm(r_SCI)^2, 3*r_SCI(2)*r_SCI(3);
-        3*r_SCI(1)*r_SCI(3), 3*r_SCI(2)*r_SCI(3), 3*r_SCI(3)^2 - norm(r_SCI)^2];
-    
+    [d_dr, d_drdot] = partialsCentralGrav(r_SCI, gm);
+% 
+%     d_drdot = zeros(3);
+%     d_dr = gm/(norm(r_SCI)^5)*...
+%        [3*r_SCI(1)^2 - norm(r_SCI)^2, 3*r_SCI(1)*r_SCI(2), 3*r_SCI(1)*r_SCI(3);
+%         3*r_SCI(1)*r_SCI(2), 3*r_SCI(2)^2 - norm(r_SCI)^2, 3*r_SCI(2)*r_SCI(3);
+%         3*r_SCI(1)*r_SCI(3), 3*r_SCI(2)*r_SCI(3), 3*r_SCI(3)^2 - norm(r_SCI)^2];
+%     
     % partials from perturbations
     d_dr = d_dr + d_dr_SRP + d_dr_TB;
     d_drdot = d_drdot + d_drdot_SRP + d_drdot_TB;

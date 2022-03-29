@@ -77,10 +77,11 @@ for j = 1:N
 
     % Sigma0 = eye(6);
 
-    % geodetic location of ALTAIR
-    phi = 0.1640; %[rad] latitude
-    lambda = 2.9231; %[rad] longitude
-    h = 0.0835; % [km] altitude
+% WHY DO I HAVE THIS IN RADIANS!??? SHOULD BE DEGREES
+    %     % geodetic location of ALTAIR
+%     phi = 0.1641; %[rad] latitude
+%     lambda = 2.9231; %[rad] longitude
+%     h = 0.0835; % [km] altitude
     [x_ECEF, R1] = ENU2ECEF(x_ENU, phi, lambda, h);
     % Sigma1 = R1*Sigma0*R1';
 

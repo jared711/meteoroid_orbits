@@ -40,6 +40,7 @@ end
 radii = cspice_bodvrd( 'EARTH', 'RADII', 3 );
 flat = (radii(1) - radii(3))/radii(1);
 r_ECEF = cspice_georec(deg2rad(lon), deg2rad(lat), h, radii(1), flat);
+% r_ECEF = GD2ECEF(lat,lon,h); % Replace custom function with Spice equivalent 
 
 v_ENU = azel2cart(az, el, -v);
 R = rotzd(90 + lon)*rotxd(90 - lat);
@@ -47,6 +48,34 @@ v_ECEF = R*v_ENU;
 
 x_ECEF = [r_ECEF; v_ECEF];
 
-J2 = eye(6); % 2/7/22 To-Do implement this Jacobian
+r_E = 6378.137; % [km]
+e_E = 0.081819190842621; % []
 
+N = r_E/sqrt(1-e_E^2*sind(lat)^2);
+dNdlat = r_E*e_E^2*sind(lat)*cosd(lat)/sqrt(1-e_E^2*sind(lat)^2)^3;
+
+S1 = [-(N+h)*sind(lat)*cosd(lon) + dNdlat*cosd(lat)*cosd(lon),  -(N+h)*cosd(lat)*sind(lon), cosd(lat)*cosd(lon);
+      -(N+h)*sind(lat)*sind(lon) + dNdlat*cosd(lat)*sind(lon),   (N+h)*cosd(lat)*cosd(lon), cosd(lat)*sind(lon);
+     (N*(1-e_E^2) + h)*cosd(lat) + dNdlat*(1-e_E^2)*sind(lat),                           0,           sind(lat)];
+S2 = zeros(3);
+dRdlat = rotzd(lon+90)*[0,             0,            0;
+                        0,  sind(90-lat), cosd(90-lat);
+                        0, -cosd(90-lat), sind(90-lat)];
+dRdlon = [-sind(90+lon), -cosd(90+lon), 0;
+           cosd(90+lon), -sind(90+lon), 0;
+                      0,             0, 0]*rotxd(90-lat);
+S31 = dRdlat*[v*cosd(el)*sind(az);
+              v*cosd(el)*cosd(az);
+                       v*sind(el)];
+S32 = dRdlon*[v*cosd(el)*sind(az);
+              v*cosd(el)*cosd(az);
+                       v*sind(el)];
+S33 = zeros(3,1);
+S3 = [S31, S32, S33];
+S4 = R*[v*cosd(el)*cosd(az), -v*sind(el)*sind(az), cosd(el)*sind(az);
+       -v*cosd(el)*sind(az), -v*sind(el)*cosd(az), cosd(el)*cosd(az);
+                          0,           v*cosd(el),          sind(el)];
+J2 = [S1, S2;
+      S3  S4];
+                           
 end

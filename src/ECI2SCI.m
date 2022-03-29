@@ -15,6 +15,8 @@ function [x_SCI, R] = ECI2SCI(x_ECI, et)
 
 
 % Rotation matrix from ECI to SCI
+if ~iscolumn(x_ECI);    x_ECI = x_ECI'; end
+
 R = cspice_sxform('J2000','ECLIPJ2000',et); % transform from J2000 to ECLIPJ2000 at epoch et
 
 x_sun_ECI = cspice_spkezr('SUN', et, 'J2000', 'NONE', 'EARTH'); % [km; km/s] state of sun in ECI frame

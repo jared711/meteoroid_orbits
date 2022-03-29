@@ -37,57 +37,60 @@ r_ECI = vec(1:3); % [km] position vector
 v_ECI = vec(4:6); % [km/s] velocity vector
 a_ECI = (-gm/(norm(r_ECI)^3))*r_ECI; % [km/s^2] acceleration vector
 
-% a_J2 = acc_J2(x_ECI); 
-% a_ECI = a_ECI + a_J2;
+a_tot = a_ECI;
+dadr_tot = zeros(3);
+dadv_tot = zeros(3);
 
 if flags(1)
-    [a_drag, d_dr_drag, d_drdot_drag] = acc_drag(x_ECI, A, m); % [km/s^2]
-else
-    a_drag = zeros(3,1); % [km/s^2]
-    d_dr_drag = zeros(3);
-    d_drdot_drag = zeros(3);
+    [a_drag, dadr_drag, dadv_drag] = acc_drag(x_ECI, A, m); % [km/s^2]
+    a_tot = a_tot + a_drag;
+    dadr_tot = dadr_tot + dadr_drag;
+    dadv_tot = dadv_tot + dadv_drag;
 end
 
 if flags(2)
     r_earth_ECI = cspice_spkpos('EARTH', et, 'J2000', 'NONE', 'SUN'); 
-    [a_SRP, d_dr_SRP, d_drdot_SRP] = acc_SRP(r_ECI + r_earth_ECI, A, m); % [km/s^2]
-else
-    a_SRP = zeros(3,1); % [km/s^2]
-    d_dr_SRP = zeros(3);
-    d_drdot_SRP = zeros(3);
+    [a_SRP, dadr_SRP, dadv_SRP] = acc_SRP(r_ECI + r_earth_ECI, A, m); % [km/s^2]
+    a_tot = a_tot + a_SRP;
+    dadr_tot = dadr_tot + dadr_SRP;
+    dadv_tot = dadv_tot + dadv_SRP;
 end
 
 if flags(3)
-    [a_TB, d_dr_TB, d_drdot_TB] = acc_TB_ECI(r_ECI, et, bodies);
-else
-    a_TB = zeros(3,1);
-    d_dr_TB = zeros(3);
-    d_drdot_TB = zeros(3);
+    [a_TB, dadr_TB, dadv_TB] = acc_TB_ECI(r_ECI, et, bodies);
+    a_tot = a_tot + a_TB;
+    dadr_tot = dadr_tot + dadr_TB;
+    dadv_tot = dadv_tot + dadv_TB;
 end
 
-
+try 
+    if flags(4)
+        [a_J2, dadr_J2, dadv_J2] = acc_J2(x_ECI);
+        a_tot = a_tot + a_J2;
+        dadr_tot = dadr_tot + dadr_J2;
+        dadv_tot = dadv_tot + dadv_J2;
+    end
+catch
+end
+        
 
 vec_dot = zeros(6,1);
 vec_dot(1:3) = v_ECI;
-vec_dot(4:6) = a_ECI + a_drag + a_SRP + a_TB;
+vec_dot(4:6) = a_tot;
 
 if length(vec) == 42
     PHI = reshape(vec(7:42),6,6);
 
-    % partials from central gravity field
-    d_drdot = zeros(3);
-    d_dr = gm/(norm(r_ECI)^5)*...
+    % partials from central gravity field (so I don't have to compute this
+    % when there is no STM
+    dadr_tot = dadr_tot + gm/(norm(r_ECI)^5)*...
        [3*r_ECI(1)^2 - norm(r_ECI)^2, 3*r_ECI(1)*r_ECI(2), 3*r_ECI(1)*r_ECI(3);
         3*r_ECI(1)*r_ECI(2), 3*r_ECI(2)^2 - norm(r_ECI)^2, 3*r_ECI(2)*r_ECI(3);
         3*r_ECI(1)*r_ECI(3), 3*r_ECI(2)*r_ECI(3), 3*r_ECI(3)^2 - norm(r_ECI)^2];
     
-    % partials from perturbations
-    d_dr = d_dr + d_dr_drag + d_dr_SRP + d_dr_TB;
-    d_drdot = d_drdot + d_drdot_drag + d_drdot_SRP + d_drdot_TB;
-    
     % variational equations
-    PHI_dot = [zeros(3),  eye(3);
-               d_dr, d_drdot]*PHI;
+    PHI_dot = [zeros(3),   eye(3);
+               dadr_tot, dadv_tot]*PHI;
     vec_dot(7:42) = reshape(PHI_dot,36,1);
 elseif length(vec) == 6
 else
