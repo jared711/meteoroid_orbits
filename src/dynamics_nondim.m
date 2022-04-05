@@ -1,4 +1,4 @@
-function [vec_dot] = dynamics_nondim(t, vec, et0, flags, norm_units, A, m, bodies)
+function [vec_dot] = dynamics_nondim(t, vec, et0, flags, norm_units, A, m, bodies, frame)
 %DYNAMICS_NONDIM calculates the time derivative of a non-dimensional
 %state vector given in cartesian coordinates in an inertial frame about the
 %central body. Can take drag and solar radiation pressure into account.
@@ -55,22 +55,32 @@ x_dim = dim(x,DU,VU);
 r_dim = x_dim(1:3);
 
 if flags(1) % drag
-    [a_drag, dadr_drag, dadv_drag] = acc_drag(x_dim, A, m); % [km/s^2]
-    a_tot = a_tot + a_drag*DU/VU^2; % *TU^2 is the same as dividing by the acceleration unit (VU^2/DU)
-    dadr_tot = dadr_tot + dadr_drag*TU^2;
-    dadv_tot = dadv_tot + dadv_drag*TU;
+    if frame == "ECI"
+        [a_drag, dadr_drag, dadv_drag] = acc_drag(x_dim, A, m); % [km/s^2]
+        a_tot = a_tot + a_drag*DU/VU^2; % *TU^2 is the same as dividing by the acceleration unit (VU^2/DU)
+        dadr_tot = dadr_tot + dadr_drag*TU^2;
+        dadv_tot = dadv_tot + dadv_drag*TU;
+    end
 end
 
 if flags(2) % SRP
-    r_earth_ECI = cspice_spkpos('EARTH', et, 'J2000', 'NONE', 'SUN'); 
-    [a_SRP, dadr_SRP, dadv_SRP] = acc_SRP(r_dim + r_earth_ECI, A, m); % [km/s^2]
+    if frame == "ECI"
+        r_earth_ECI = cspice_spkpos('EARTH', et, 'J2000', 'NONE', 'SUN');
+        [a_SRP, dadr_SRP, dadv_SRP] = acc_SRP(r_dim + r_earth_ECI, A, m); % [km/s^2]
+    else
+        [a_SRP, dadr_SRP, dadv_SRP] = acc_SRP(r_dim, A, m); % [km/s^2]
+    end
     a_tot = a_tot + a_SRP*DU/VU^2;
     dadr_tot = dadr_tot + dadr_SRP*TU^2;
     dadv_tot = dadv_tot + dadv_SRP*TU;
 end
 
 if flags(3) % Third Body
-    [a_TB, dadr_TB, dadv_TB] = acc_TB_ECI(r_dim, et, bodies);
+    if frame == "ECI"
+        [a_TB, dadr_TB, dadv_TB] = acc_TB_ECI(r_dim, et, bodies);
+    elseif frame == "SCI"
+        [a_TB, dadr_TB, dadv_TB] = acc_TB_SCI(r_dim, et, bodies);
+    end
     a_tot = a_tot + a_TB*DU/VU^2;
     dadr_tot = dadr_tot + dadr_TB*TU^2;
     dadv_tot = dadv_tot + dadv_TB*TU;
@@ -78,10 +88,12 @@ end
 
 try 
     if flags(4) % J2
-        [a_J2, dadr_J2, dadv_J2] = acc_J2(x_dim);
-        a_tot = a_tot + a_J2*DU/VU^2;
-        dadr_tot = dadr_tot + dadr_J2*TU^2;
-        dadv_tot = dadv_tot + dadv_J2*TU;
+        if frame == "ECI"
+            [a_J2, dadr_J2, dadv_J2] = acc_J2(x_dim);
+            a_tot = a_tot + a_J2*DU/VU^2;
+            dadr_tot = dadr_tot + dadr_J2*TU^2;
+            dadv_tot = dadv_tot + dadv_J2*TU;
+        end
     end
 catch
 end
@@ -96,9 +108,9 @@ if length(vec) == 42
     % partials from central gravity field (so I don't have to compute this
     % when there is no STM
     dadr_tot = dadr_tot + gm/(norm(r)^5)*...
-       [3*r(1)^2 - norm(r)^2, 3*r(1)*r(2), 3*r(1)*r(3);
-        3*r(1)*r(2), 3*r(2)^2 - norm(r)^2, 3*r(2)*r(3);
-        3*r(1)*r(3), 3*r(2)*r(3), 3*r(3)^2 - norm(r)^2];
+       [3*r(1)^2 - norm(r)^2,          3*r(1)*r(2),          3*r(1)*r(3);
+                 3*r(1)*r(2), 3*r(2)^2 - norm(r)^2,          3*r(2)*r(3);
+                 3*r(1)*r(3),          3*r(2)*r(3), 3*r(3)^2 - norm(r)^2];
     
     % variational equations
     PHI_dot = [zeros(3),   eye(3);

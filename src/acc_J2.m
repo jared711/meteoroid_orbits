@@ -1,5 +1,5 @@
 function [a_J2, d_dr, d_drdot] = acc_J2(x_ECI)
-%ACC_J2 Summary of this function goes here
+%ACC_J2 computes the acceleration due to J2 effects in the ECI frame
 % 
 % [OUTPUTARGS] = ACC_J2(INPUTARGS)
 % 

@@ -3,9 +3,11 @@ function [a_SRP, d_dr, d_drdot] = acc_SRP(r_sun, A, m, c_srp)
 % 
 % [a_SRP, d_dr, d_drdot] = ACC_SRP(r_sun, options)
 % 
-% Inputs: r_sun [km] (3x1) vector pointing from sun to object
+% Inputs:   r_sun [km] (3x1) vector pointing from sun to particle
+%           A [m^2] (scalar) cross sectional area of particle
+%           m = [kg] (scalar) mass of particle
 % 
-% Outputs: 
+% Outputs:  a_SRP [km/s^2] (3x1) acceleration of particle
 % 
 % See also: 
 
@@ -14,7 +16,7 @@ function [a_SRP, d_dr, d_drdot] = acc_SRP(r_sun, A, m, c_srp)
 if nargin < 4;  c_srp = 1;  end
 
 d = norm(r_sun); % [km] distance to sun
-% A = options.A; % [m^2] cross sectional area
+% A = options.
 % m = options.m/1000; % [kg] mass of meteor
 % c_srp = options.c_srp; % [] absoption + reflection % TODO find good values of c_srp for meteoroids
 a_SRP = p_srp(d)*c_srp*(A/m)*unit(r_sun); % [m/s^2]

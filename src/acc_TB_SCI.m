@@ -1,7 +1,7 @@
 function [a_TB, d_dr, d_drdot] = acc_TB_SCI(r_SCI, et, bodies)
 %ACC_TB Summary of this function goes here
 % 
-% [a_TB, d_dr, d_drdot] = ACC_TB(r_SCI, et, options)
+% [a_TB, d_dr, d_drdot] = ACC_TB_SCI(r_SCI, et, bodies)
 % 
 % Inputs: 
 % 
