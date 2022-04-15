@@ -1,15 +1,18 @@
 function [a_SRP, d_dr, d_drdot] = acc_SRP(r_sun, A, m, c_srp)
-%ACC_SRP Summary of this function goes here
+%ACC_SRP computes acceleration due to drag in the any frame
 % 
 % [a_SRP, d_dr, d_drdot] = ACC_SRP(r_sun, options)
 % 
 % Inputs:   r_sun [km] (3x1) vector pointing from sun to particle
 %           A [m^2] (scalar) cross sectional area of particle
 %           m = [kg] (scalar) mass of particle
+%           c_srp [] (scalar) coefficient of reflection {1}
 % 
 % Outputs:  a_SRP [km/s^2] (3x1) acceleration of particle
+%           d_dr [] (3x3) partial derivatives w.r.t r
+%           d_drdot [] (3x3) partial derivatives w.r.t rdot
 % 
-% See also: 
+% See also: acc_J2, acc_drag, acc_TB_ECI, acc_TB_SCI
 
 % Author: Jared Blanchard 	Date: 2022/02/03 09:20:00 	Revision: 0.1 $
 

@@ -11,7 +11,7 @@ function [a_drag, d_dr, d_dv] = acc_drag(x_ECI, A, m)
 %           d_dr [] (3x3) partial derivatives w.r.t r
 %           d_drdot [] (3x3) partial derivatives w.r.t rdot
 % 
-% See also: 
+% See also: acc_J2, acc_SRP, acc_TB_ECI, acc_TB_SCI
 
 % Author: Jared Blanchard 	Date: 2022/02/03 09:05:21 	Revision: 0.1 $
 

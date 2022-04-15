@@ -1,13 +1,18 @@
 function [a_TB, d_dr, d_drdot] = acc_TB_SCI(r_SCI, et, bodies)
-%ACC_TB Summary of this function goes here
+%ACC_TB_SCI computes acceleration due to third body effects in the SCI frame
 % 
 % [a_TB, d_dr, d_drdot] = ACC_TB_SCI(r_SCI, et, bodies)
 % 
-% Inputs: 
+% Inputs:   r_SCI [km] (3x1) position in SCI frame
+%           et = [sec] (scalar) ephemeris time
+%           bodies = [] {Nx1} cell array containing names of bodies to
+%           include
 % 
-% Outputs: 
+% Outputs:  a_TB [km/s^2] (3x1) acceleration due to third-body effects
+%           d_dr [] (3x3) partial derivatives w.r.t r
+%           d_drdot [] (3x3) partial derivatives w.r.t rdot
 % 
-% See also: 
+% See also: acc_J2, acc_SRP, acc_drag, acc_TB_ECI
 
 % Author: Jared Blanchard 	Date: 2022/02/03 09:28:32 	Revision: 0.1 $
 

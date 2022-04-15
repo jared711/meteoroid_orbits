@@ -3,11 +3,13 @@ function [a_J2, d_dr, d_drdot] = acc_J2(x_ECI)
 % 
 % [OUTPUTARGS] = ACC_J2(INPUTARGS)
 % 
-% Inputs: 
+% Inputs:   x_ECI [km;km/s] (6x1) state in ECI frame
 % 
-% Outputs: 
+% Outputs:  a_drag [km/s^2] (3x1) acceleration due to drag
+%           d_dr [] (3x3) partial derivatives w.r.t r
+%           d_drdot [] (3x3) partial derivatives w.r.t rdot
 % 
-% See also: 
+% See also: acc_drag, acc_SRP, acc_TB_ECI, acc_TB_SCI
 
 % Author: Jared Blanchard 	Date: 2022/02/03 08:45:14 	Revision: 0.1 $
 
